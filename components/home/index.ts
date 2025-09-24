@@ -1,2 +1,3 @@
-export * from "./Moviecard";
+export * from "./MovieCard";
 export * from "./themeToggler";
+export * from "./MoviesContainer";

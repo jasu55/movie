@@ -7,20 +7,20 @@ import {
   CardTitle,
 } from "../ui/card";
 import { FaStar } from "react-icons/fa";
+import Link from "next/link";
 
 type MovieCardProps = {
   title: string;
   score: number;
   image: string;
-  id: number;
 };
 
-export const MovieCard = ({ title, score, image, id }: MovieCardProps) => {
+export const MovieCard = ({ title, score, image }: MovieCardProps) => {
   return (
     <Card className="w-[230px] bg-secondary p-0 overflow-hidden gap-2">
       <CardContent className="p-0">
         <Image
-          src={`https://upload.wikimedia.org/wikipedia/en/b/bb/Dear_Santa_%282024_film%29_poster.jpg`}
+          src={`https://image.tmdb.org/t/p/w500${image}`}
           alt=""
           width={230}
           height={340}
