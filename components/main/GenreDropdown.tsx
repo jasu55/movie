@@ -13,7 +13,8 @@ import { Badge } from "../ui/badge";
 import { getMoviesGenres } from "@/utils/get-data";
 
 export async function GenreDropdown() {
-  const genres = await getMoviesGenres();
+  const genresResponse = await getMoviesGenres();
+  console.log("GENRES RESPONSE", genresResponse);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,7 +28,16 @@ export async function GenreDropdown() {
         </DropdownMenuLabel>
         <p className="px-2">See list of movie genres</p>
         <DropdownMenuSeparator />
-        <DropdownMenuItem></DropdownMenuItem>
+        <DropdownMenuItem className="hover:!bg-transparent max-w-[400px] flex flex-wrap gap-2">
+          {genresResponse.genres.map((genre: { id: string; name: string }) => (
+            <Link key={genre.id} href={`/genre?id=${genre.id}`}>
+              <Badge variant="outline">
+                {genre.name}
+                <ChevronRight />
+              </Badge>
+            </Link>
+          ))}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
