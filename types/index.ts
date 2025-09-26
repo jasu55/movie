@@ -25,3 +25,8 @@ export type GenreType = {
 export type GenreResponseType = {
   genres: GenreType[];
 };
+export type TrailerType = {
+  id: string;
+  key: string;
+  type: string;
+};

@@ -10,7 +10,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { MovieType } from "@/types";
+import { MovieType, TrailerResponseType } from "@/types";
+import { getMovieTrailers } from "@/utils/get-data";
+import { TrailerDialog } from "../trailer/TrailerDialog";
 
 type MovieCarouselProps = {
   movies: MovieType[];
@@ -39,17 +41,7 @@ export function MovieCarousel({ movies }: MovieCarouselProps) {
       <Carousel setApi={setApi} className="w-screen">
         <CarouselContent>
           {movies.map((movie, index) => (
-            <CarouselItem key={index}>
-              <div className="p-1">
-                <Card>
-                  <CardContent className="flex aspect-video max-h-[600px] items-center justify-center p-6">
-                    <span className="text-4xl font-semibold">
-                      {movie.title}
-                    </span>
-                  </CardContent>
-                </Card>
-              </div>
-            </CarouselItem>
+            <MovieCarouselItem key={index} movie={movie} />
           ))}
         </CarouselContent>
         <CarouselPrevious className="left-13" />
@@ -71,3 +63,32 @@ export function MovieCarousel({ movies }: MovieCarouselProps) {
     </>
   );
 }
+
+const MovieCarouselItem = ({ movie }: { movie: MovieType }) => {
+  const [trailerKey, setTrailerKey] = React.useState("");
+
+  const getTrailerData = async () => {
+    const trailerData: TrailerResponseType = await getMovieTrailers(
+      movie.id.toString()
+    );
+    const trailer = trailerData.results.find(
+      (trailer) => trailer.type === "Trailer"
+    );
+    setTrailerKey(trailer?.key || "");
+  };
+  React.useEffect(() => {
+    getTrailerData();
+  }, []);
+  return (
+    <CarouselItem>
+      <div className="p-1">
+        <Card>
+          <CardContent className="flex aspect-video max-h-[600px] items-center justify-center p-6">
+            <span className="text-4xl font-semibold">{movie.title}</span>
+            <TrailerDialog youtubeKey={trailerKey} />
+          </CardContent>
+        </Card>
+      </div>
+    </CarouselItem>
+  );
+};

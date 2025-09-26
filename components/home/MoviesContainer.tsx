@@ -1,5 +1,5 @@
 import { MovieType } from "@/types";
-import { MovieCard } from "./Moviecard";
+import { MovieCard } from "./MovieCard";
 
 type MoviesContainerProps = {
   movies: MovieType[];

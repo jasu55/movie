@@ -1,6 +1,5 @@
 import { Search } from "lucide-react";
 import { ThemeToggler } from "../home";
-import { Input } from "../ui/input";
 import { GenreDropdown } from "@/components/main/GenreDropdown";
 import { SearchSection } from "./SearchSection";
 
