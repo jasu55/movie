@@ -1,22 +1,15 @@
 "use client";
 import * as React from "react";
 
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
-  CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { MovieType, TrailerResponseType } from "@/types";
-import { getMovieTrailers } from "@/utils/get-data";
-import { TrailerDialog } from "../trailer/TrailerDialog";
-
-type MovieCarouselProps = {
-  movies: MovieType[];
-};
+import { MovieCarouselProps } from "@/types";
+import { MovieCarouselItem } from "./movieCarouselItem";
 
 export function MovieCarousel({ movies }: MovieCarouselProps) {
   const [api, setApi] = React.useState<CarouselApi>();
@@ -39,56 +32,27 @@ export function MovieCarousel({ movies }: MovieCarouselProps) {
   return (
     <>
       <Carousel setApi={setApi} className="w-screen">
-        <CarouselContent>
-          {movies.map((movie, index) => (
+        <CarouselContent className="m-auto">
+          {movies.results.slice(0, 5).map((movie, index) => (
             <MovieCarouselItem key={index} movie={movie} />
           ))}
         </CarouselContent>
         <CarouselPrevious className="left-13" />
         <CarouselNext className="right-13" />
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+          {Array.from({ length: count }).map((_, index) => (
+            <div
+              onClick={() => {
+                api?.scrollTo(index);
+              }}
+              key={index}
+              className={`rounded-full size-4 cursor-pointer transition-all ${
+                index + 1 === current ? "bg-white" : "bg-gray-600"
+              }`}
+            ></div>
+          ))}
+        </div>
       </Carousel>
-      <div className="flex gap-2">
-        {Array.from({ length: count }).map((_, index) => (
-          <div
-            onClick={() => {
-              api?.scrollTo(index);
-            }}
-            key={index}
-            className={`rounded-full size-4 ${
-              index + 1 === current ? "bg-white" : "bg-gray-600"
-            }`}
-          ></div>
-        ))}
-      </div>
     </>
   );
 }
-
-const MovieCarouselItem = ({ movie }: { movie: MovieType }) => {
-  const [trailerKey, setTrailerKey] = React.useState("");
-
-  const getTrailerData = async () => {
-    const trailerData: TrailerResponseType = await getMovieTrailers(
-      movie.id.toString()
-    );
-    const trailer = trailerData.results.find(
-      (trailer) => trailer.type === "Trailer"
-    );
-    setTrailerKey(trailer?.key || "");
-  };
-  React.useEffect(() => {
-    getTrailerData();
-  }, []);
-  return (
-    <CarouselItem>
-      <div className="p-1">
-        <Card>
-          <CardContent className="flex aspect-video max-h-[600px] items-center justify-center p-6">
-            <span className="text-4xl font-semibold">{movie.title}</span>
-            <TrailerDialog youtubeKey={trailerKey} />
-          </CardContent>
-        </Card>
-      </div>
-    </CarouselItem>
-  );
-};

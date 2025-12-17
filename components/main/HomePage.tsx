@@ -15,7 +15,7 @@ export async function HomePage() {
 
   return (
     <div>
-      <MovieCarousel movies={nowPlayingMovies.results} />
+      <MovieCarousel movies={nowPlayingMovies} />
       <MoviesContainer movies={upcomingMovies.results} title="Upcoming" />
       <MoviesContainer movies={popularMovies.results} title="Popular" />
       <MoviesContainer movies={topRatedMovies.results} title="Top Rated" />
