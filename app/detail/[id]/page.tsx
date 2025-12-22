@@ -1,42 +1,99 @@
-import { getMovieDetail, getMovieTrailers } from "@/utils/get-data";
-import { TrailerResponseType } from "@/types";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import React, { Suspense } from "react";
+import { Directorname, movieResponseType, MovieType } from "@/types";
+import {
+  Getmoviesdescribtion,
+  GetmoviesDirectorsname,
+  GetmoviesMorelikethis,
+  GetmoviesTrailer,
+} from "@/get-data";
 import { Button } from "@/components/ui/button";
-import { TrailerDialog } from "@/components/trailer/TrailerDialog";
 
-type DetailDynamicPageProps = { params: Promise<{ id: string }> };
+import { FaChevronRight } from "react-icons/fa";
+import Link from "next/link";
+import { Moviedescribecard } from "@/components/movieDetails/Moviedescribe";
+import { MovieCard } from "@/components/movieDetails/Moviecard";
+import { SkeletonCardMoviedetails } from "@/components/movieDetails/detailPageSkelton";
 
-export const generateMetadata = async ({ params }: DetailDynamicPageProps) => {
+type MovieidPageProps = {
+  params: Promise<{ id: string }>;
+};
+export const generateMetadata = async ({ params }: MovieidPageProps) => {
   const dynamicParams = await params;
   const id = dynamicParams.id;
-  const movieDetailData = await getMovieDetail(id);
+  const movieDetailData = await Getmoviesdescribtion(id);
 
   return {
-    title: `MovieZ | ${movieDetailData.title}`,
-    description: movieDetailData.overview,
-    keywords: movieDetailData.title,
+    title: `Movie App | ${movieDetailData.title}`,
   };
 };
+const Movieid = async ({ params }: MovieidPageProps) => {
+  const params2 = await params;
+  const id = params2.id;
 
-const DetailDynamicPage = async ({ params }: DetailDynamicPageProps) => {
-  const dynamicParams = await params;
-  const id = dynamicParams.id;
-  const movieDetailData = await getMovieDetail(id);
-  const trailerData: TrailerResponseType = await getMovieTrailers(id);
-  console.log("TRAILER DATA", trailerData);
-  console.log("MOVIE DETAIL DATA", movieDetailData);
-
-  const trailer = trailerData.results.find(
-    (trailer) => trailer.type === "Trailer"
+  const Moviebyid: MovieType = await Getmoviesdescribtion(id);
+  const Moviedirectorname: Directorname = await GetmoviesDirectorsname(id);
+  const MorelikeThis: movieResponseType = await GetmoviesMorelikethis(
+    id,
+    "1",
+    Moviebyid.title
   );
+  const Movietrailer: movieResponseType = await GetmoviesTrailer(id);
+  const Trailer = Movietrailer.results.find((item) => item.type === "Trailer");
 
   return (
-    <div className="text-2xl font-bold">
-      {movieDetailData.title}
-      <div>
-        <TrailerDialog youtubeKey={trailer?.key} />
+    <Suspense fallback={<SkeletonCardMoviedetails />}>
+      <div className="sm:w-[1280px] mx-auto">
+        <Moviedescribecard
+          title={Moviebyid.title}
+          Score={Moviebyid.vote_average}
+          Image={Moviebyid.poster_path}
+          releasedate={Moviebyid.release_date}
+          id={Moviebyid.id}
+          runtime={Moviebyid.runtime}
+          backdrop_path={Moviebyid.backdrop_path}
+          genres={Moviebyid.genres}
+          overview={Moviebyid.overview}
+          crew={Moviedirectorname.crew}
+          cast={Moviedirectorname.cast}
+          vote_count={Moviebyid.vote_count}
+          Movietrailer={Trailer?.key}
+          key={""}
+          adult={false}
+          genre_ids={[]}
+          original_language={""}
+          poster_path={""}
+          release_date={""}
+          vote_average={0}
+          src={""}
+          name={""}
+          type={""}
+        ></Moviedescribecard>
+
+        <div className="flex justify-between mt-10  sm:w-[1280px] w-[375px] ">
+          {" "}
+          <div className="text-4xl font-bold">More like this</div>{" "}
+          <Link href={`/Morelikethispage?id=${id}&title=${Moviebyid.title}`}>
+            <Button>
+              See more{" "}
+              <FaChevronRight color="black" className="w-[16px] h-[16px]" />
+            </Button>
+          </Link>
+        </div>
+        <div className="flex  gap-6  mt-10 sm:flex-wrap w-[375px] ml-5 sm:w-[1280px] overflow-hidden">
+          {" "}
+          {MorelikeThis.results.slice(0, 5).map((movie) => (
+            <MovieCard
+              key={movie.id}
+              title={movie.title}
+              score={movie.vote_average}
+              image={movie.poster_path}
+              id={Number(movie.id)}
+            ></MovieCard>
+          ))}
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
-export default DetailDynamicPage;
+
+export default Movieid;

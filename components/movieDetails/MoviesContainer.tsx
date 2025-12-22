@@ -1,10 +1,5 @@
-import { MovieType } from "@/types";
-import { MovieCard } from "./Moviecard";
-
-type MoviesContainerProps = {
-  movies: MovieType[];
-  title: string;
-};
+import { MoviesContainerProps } from "@/types";
+import { MovieCard } from "../movieDetails/Moviecard";
 
 export const MoviesContainer = ({ movies, title }: MoviesContainerProps) => {
   return (
@@ -14,7 +9,7 @@ export const MoviesContainer = ({ movies, title }: MoviesContainerProps) => {
         {movies.slice(0, 10).map((movie) => (
           <MovieCard
             key={movie.id}
-            id={movie.id}
+            id={Number(movie.id)}
             title={movie.title}
             score={movie.vote_average}
             image={movie.poster_path}

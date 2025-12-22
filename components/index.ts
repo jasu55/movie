@@ -1,2 +1,2 @@
-export * from "./main";
+export * from "./movieDetails";
 export * from "./home";

@@ -11,7 +11,6 @@ import {
 import Link from "next/link";
 
 import { FaSearch, FaStar } from "react-icons/fa";
-import { Badge } from "../ui/badge";
 import { movieResponseType } from "@/types";
 import { Getmoviebysearch } from "@/get-data";
 
@@ -31,11 +30,7 @@ export const SearchSection = () => {
       setIsOpen(false);
     }
     setFoundMovies(foundData);
-  };
-  const [isVisible, setIsVisible] = useState(false);
-
-  const toggleVisibility = () => {
-    setIsVisible(!isVisible);
+    console.log("FOUND MOVIES", foundData);
   };
 
   return (
@@ -48,46 +43,30 @@ export const SearchSection = () => {
       >
         <PopoverTrigger>
           <div className="flex items-center gap-4 h-[59px] sm:hidden">
-            <Badge
-              onClick={toggleVisibility}
-              className="bg-foreground sm:hidden py-2 px-3"
-            >
-              <FaSearch></FaSearch>
-            </Badge>
-            {isVisible ? (
-              <div className="flex gap-2">
-                {" "}
+            <div className="flex gap-2 items-center">
+              {" "}
+              <div className="relative flex-1">
+                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                 <Input
                   value={searchValue}
                   onChange={handleChange}
-                  className=" w-[180px] sm:visible"
+                  className="w-[180px] pl-10"
                   placeholder="Search.."
                   type="search"
                 />
-                <Badge
-                  onClick={toggleVisibility}
-                  className="bg-gray-500 sm:hidden px-3"
-                >
-                  X
-                </Badge>
               </div>
-            ) : (
-              <div className="flex gap-2">
-                {" "}
-                <img src="/film.png" alt="" height={16} width={16} />
-                <h2 className="text-base font-bold leading-4 text-indigo-700">
-                  <Link href="/">Movie Z</Link>
-                </h2>
-              </div>
-            )}
+            </div>
           </div>
-          <Input
-            value={searchValue}
-            onChange={handleChange}
-            className="hidden sm:block w-[180px] "
-            placeholder="Search.."
-            type="search"
-          />
+          <div className="relative hidden sm:block">
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={searchValue}
+              onChange={handleChange}
+              className="w-[180px] pl-10"
+              placeholder="Search.."
+              type="search"
+            />
+          </div>
         </PopoverTrigger>
 
         <PopoverContent
@@ -95,7 +74,7 @@ export const SearchSection = () => {
           onOpenAutoFocus={(e) => e.preventDefault()}
           onCloseAutoFocus={(e) => e.preventDefault()}
         >
-          {foundMovies?.results.slice(0, 5).map((movie, index) => {
+          {foundMovies?.results?.slice(0, 5).map((movie, index) => {
             return (
               <div key={index} className="flex gap-4 ml-5  ">
                 <div className="mt-2">
@@ -121,7 +100,7 @@ export const SearchSection = () => {
                 </div>
                 <div className="ml-52 mt-17.5 sm:ml-[370px] sm:mt-[71px] sm:mb-[10px] absolute bg-foreground rounded-md">
                   {" "}
-                  <Link href={`/moviebyid/${movie.id}`}>
+                  <Link href={`/detail/${movie.id}`}>
                     {" "}
                     <Button>See more</Button>
                   </Link>
@@ -130,7 +109,7 @@ export const SearchSection = () => {
             );
           })}
           <div className=" border flex justify-center rounded-md py-2">
-            {foundMovies?.results.length === 0 ? (
+            {foundMovies?.results?.length === 0 ? (
               <Link href={`/Search/${searchValue}`}>Not results found </Link>
             ) : (
               <Link href={`/Search/${searchValue}`}>

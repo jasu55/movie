@@ -17,7 +17,7 @@ export const TrailerDialog = ({
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Watch Trailer</Button>
+          <Button className="text-blue-600">Watch Trailer</Button>
         </DialogTrigger>
         <DialogContent className="p-0 sm:max-w-4xl">
           <DialogHeader>

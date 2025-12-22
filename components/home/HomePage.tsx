@@ -1,7 +1,7 @@
-import { MoviesContainer } from "@/components/home";
-import { MovieCarousel } from "@/components/main/";
+import { MovieCarousel } from "@/components/movieDetails";
 import { movieResponseType } from "@/types";
 import { getMoviesList } from "@/utils/get-data";
+import { MoviesContainer } from "../movieDetails/MoviesContainer";
 
 export async function HomePage() {
   const upcomingMovies: movieResponseType = await getMoviesList("upcoming");

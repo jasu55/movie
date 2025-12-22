@@ -11,10 +11,9 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { getMoviesGenres } from "@/utils/get-data";
-import { GenreResponseType } from "@/types";
 
 export async function GenreDropdown() {
-  const genresResponse: GenreResponseType = await getMoviesGenres();
+  const genresResponse = await getMoviesGenres();
 
   console.log("GENRE RES", genresResponse);
 

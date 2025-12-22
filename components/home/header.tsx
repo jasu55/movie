@@ -1,8 +1,8 @@
 import { Search } from "lucide-react";
 import { ThemeToggler } from "../home";
-import { GenreDropdown } from "@/components/main/GenreDropdown";
-import { SearchSection } from "./SearchSection";
+import { GenreDropdown } from "@/components/genre/GenreDropdown";
 import Link from "next/link";
+import { SearchSection } from "../search/SearchSection";
 
 export const Header = () => {
   return (

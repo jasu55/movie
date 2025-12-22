@@ -52,3 +52,35 @@ export type Directorname = {
 export type MovieCarouselProps = {
   movies: movieResponseType;
 };
+
+export type GenreResponseType = {
+  genres: GenreType[];
+};
+
+export type GenreType = {
+  id: string;
+  name: string;
+};
+export type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+};
+export type PaginationcomponentProps = {
+  currentUrl: string;
+  page: string;
+};
+export type SearchPageProps = {
+  params: Promise<{ value: string }>;
+  searchParams: Promise<{ id?: string; name?: string }>;
+};
+export type MoviesContainerProps = {
+  movies: MovieType[];
+  title: string;
+};
+export type MovieCardProps = {
+  title: string;
+  score: number;
+  image: string;
+  id: number;
+};

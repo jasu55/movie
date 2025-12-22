@@ -20,11 +20,19 @@ export const MovieCarouselItem = ({ movie }: { movie: MovieType }) => {
   const [mounted, setMounted] = React.useState(false);
 
   const getTrailerData = async () => {
-    const trailerData: movieResponseType = await GetmoviesTrailer(
-      movie.id.toString()
-    );
-    const trailer = trailerData.results.find((item) => item.type === "Trailer");
-    setTrailerKey(trailer?.key || "");
+    try {
+      const trailerData: movieResponseType = await GetmoviesTrailer(
+        movie.id.toString()
+      );
+      if (trailerData?.results) {
+        const trailer = trailerData.results.find(
+          (item) => item.type === "Trailer"
+        );
+        setTrailerKey(trailer?.key || "");
+      }
+    } catch (error) {
+      console.error("Error fetching trailer:", error);
+    }
   };
 
   React.useEffect(() => {
@@ -59,7 +67,7 @@ export const MovieCarouselItem = ({ movie }: { movie: MovieType }) => {
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="rounded-full bg-white text-foreground mt-10  ">
+            <Button className="rounded-full bg-white  mt-10  ">
               <GiPlayButton /> Watch trailer
             </Button>
           </DialogTrigger>
