@@ -13,13 +13,13 @@ import { MovieCardProps } from "@/types";
 export const MovieCard = ({ title, score, image, id }: MovieCardProps) => {
   return (
     <Link href={`/detail/${id}`}>
-      <Card className="w-[230px] h-110 bg-secondary p-0 overflow-hidden gap-2">
+      <Card className="w-[350px] h-[560px] bg-secondary p-0 overflow-hidden gap-2">
         <CardContent className="p-0">
           <Image
             src={`https://image.tmdb.org/t/p/w500${image}`}
             alt=""
-            width={230}
-            height={340}
+            width={350}
+            height={500}
           />
         </CardContent>
         <CardFooter className="flex flex-col items-start p-2">

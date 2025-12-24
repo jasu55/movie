@@ -1,6 +1,11 @@
-import { MovieCard } from "@/components/home";
+import { FaChevronRight } from "react-icons/fa";
+import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Paginationcomponent } from "@/components/home/Pagination";
+import { getGenremovies, getMoviesbygenreid } from "@/get-data";
 import { movieResponseType } from "@/types";
-import { getMoviesByGenreId } from "@/utils/get-data";
+import { MovieCard } from "@/components/movieDetails/Moviecard";
 
 type GenrePageProps = {
   searchParams: Promise<{ id: string; name: string; page: string }>;
@@ -12,25 +17,86 @@ const Genre = async ({ searchParams }: GenrePageProps) => {
   const name = params.name;
   const page = params.page || "1";
 
-  const filteredMoviesResponse: movieResponseType = await getMoviesByGenreId(
+  const filteredMoviesResponse: movieResponseType = await getMoviesbygenreid(
     id,
     page
   );
-  console.log("FILTERDSEN KINONUUD", filteredMoviesResponse);
+
+  const Genremoviesresponse = await getGenremovies();
+
+  const url = `/genre?id=${id}&name=${name}&`;
+
   return (
-    <div>
-      {name}
-      <div className="flex flex-wrap gap-3">
-        {filteredMoviesResponse.results.slice(0, 10).map((movie) => (
-          <MovieCard
-            id={movie.id}
-            key={movie.id}
-            title={movie.title}
-            score={movie.vote_average}
-            image={movie.poster_path}
-          />
-        ))}
+    <div className="mx-auto sm:w-[1440px]">
+      <div className="flex gap-33">
+        <div className="text-4xl font-bold  mt-20 mb-10">Search Filter</div>
+        <div className="text-4xl font-bold  mt-20 mb-10 ml-30 sm:block hidden">
+          {" "}
+          {filteredMoviesResponse.total_results} titles in {name}
+        </div>
       </div>
+
+      <div className="sm:flex">
+        {" "}
+        <div className="sm:flex flex-wrap w-[313px] h-[200px]  gap-4 justify-start ">
+          <div className="pl-2  ">
+            <div className="text-[24px] font-semibold">Genre</div>
+            <div className="pb-5 pt-2 text-[16px]">
+              See lists of movies by genre
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {" "}
+            {Genremoviesresponse.genres.map(
+              (genre: { id: string; name: string }) => (
+                <Link
+                  key={genre.id}
+                  href={`/genre?id=${genre.id}&name=${genre.name}&page=${1}`}
+                >
+                  <div>
+                    {" "}
+                    {genre.name === name ? (
+                      <Badge className="flex items-center bg-black text-white  border border-whitegap-2 py-2">
+                        <span className="text-[12px] font-semibold ">
+                          {genre.name}
+                        </span>
+                        X
+                      </Badge>
+                    ) : (
+                      <Badge className="flex items-center gap-2 py-2 bg-foreground">
+                        <span className="text-[12px] font-semibold ">
+                          {genre.name}
+                        </span>
+                        <FaChevronRight
+                          color="#09090B"
+                          className="w-[16px] h-[16px]"
+                        />
+                      </Badge>
+                    )}
+                  </div>
+                </Link>
+              )
+            )}
+          </div>
+        </div>{" "}
+        <div className="text-[20px] font-bold mt-50 sm:hidden">
+          {" "}
+          {filteredMoviesResponse.total_results} titles in {name}
+        </div>
+        <div className="flex flex-wrap gap-3 w-[375px] sm:mt-0 mt-10 sm:w-[970px] sm:ml-[140px]">
+          {filteredMoviesResponse.results.slice(0, 12).map((movie) => (
+            <MovieCard
+              id={Number(movie.id)}
+              key={movie.id}
+              title={movie.title}
+              score={movie.vote_average}
+              image={movie.poster_path}
+            />
+          ))}
+        </div>
+      </div>
+
+      <Paginationcomponent currentUrl={url} page={page}></Paginationcomponent>
     </div>
   );
 };

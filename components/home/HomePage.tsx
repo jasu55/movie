@@ -16,9 +16,21 @@ export async function HomePage() {
   return (
     <div>
       <MovieCarousel movies={nowPlayingMovies} />
-      <MoviesContainer movies={upcomingMovies.results} title="Upcoming" />
-      <MoviesContainer movies={popularMovies.results} title="Popular" />
-      <MoviesContainer movies={topRatedMovies.results} title="Top Rated" />
+      <MoviesContainer
+        movies={upcomingMovies.results}
+        title="Upcoming"
+        category="upcoming"
+      />
+      <MoviesContainer
+        movies={popularMovies.results}
+        title="Popular"
+        category="popular"
+      />
+      <MoviesContainer
+        movies={topRatedMovies.results}
+        title="Top Rated"
+        category="top-rated"
+      />
     </div>
   );
 }

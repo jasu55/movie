@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,11 +13,28 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { getMoviesGenres } from "@/utils/get-data";
+import { GenreResponseType } from "@/types";
+import { useEffect, useState } from "react";
 
-export async function GenreDropdown() {
-  const genresResponse = await getMoviesGenres();
+export function GenreDropdown() {
+  const [genresResponse, setGenresResponse] =
+    useState<GenreResponseType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  console.log("GENRE RES", genresResponse);
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const data = await getMoviesGenres();
+        setGenresResponse(data);
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGenres();
+  }, []);
 
   return (
     <DropdownMenu>
@@ -31,17 +50,25 @@ export async function GenreDropdown() {
         <p className="px-2">See list of movies by genre</p>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="hover:!bg-transparent max-w-[400px] flex flex-wrap">
-          {genresResponse.genres.map((genre) => (
-            <Link
-              key={genre.id}
-              href={`/genre?id=${genre.id}&name=${genre.name}`}
-            >
-              <Badge variant="outline">
-                {genre.name}
-                <ChevronRight />
-              </Badge>
-            </Link>
-          ))}
+          {isLoading ? (
+            <p className="px-2 text-sm text-muted-foreground">Loading...</p>
+          ) : genresResponse ? (
+            genresResponse.genres.map((genre) => (
+              <Link
+                key={genre.id}
+                href={`/genre?id=${genre.id}&name=${genre.name}`}
+              >
+                <Badge variant="outline">
+                  {genre.name}
+                  <ChevronRight />
+                </Badge>
+              </Link>
+            ))
+          ) : (
+            <p className="px-2 text-sm text-muted-foreground">
+              Failed to load genres
+            </p>
+          )}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

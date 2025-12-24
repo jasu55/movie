@@ -21,6 +21,7 @@ export const getMoviesGenres = async () => {
         accept: "application/json",
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_KEY_TMDB_READ_ACCESS_KEY}`,
       },
+      next: { revalidate: 3600 }, // Cache for 1 hour
     }
   );
   const data = await res.json();

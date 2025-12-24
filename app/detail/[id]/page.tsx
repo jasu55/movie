@@ -79,7 +79,7 @@ const Movieid = async ({ params }: MovieidPageProps) => {
             </Button>
           </Link>
         </div>
-        <div className="flex  gap-6  mt-10 sm:flex-wrap w-[375px] ml-5 sm:w-[1280px] overflow-hidden">
+        <div className="flex  gap-6  mt-10 sm:flex-wrap ">
           {" "}
           {MorelikeThis.results.slice(0, 5).map((movie) => (
             <MovieCard

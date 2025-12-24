@@ -77,6 +77,7 @@ export type SearchPageProps = {
 export type MoviesContainerProps = {
   movies: MovieType[];
   title: string;
+  category?: string;
 };
 export type MovieCardProps = {
   title: string;
